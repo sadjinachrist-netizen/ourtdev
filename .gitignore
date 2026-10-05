@@ -1,0 +1,15 @@
+# Secrets et configuration locale
+.env
+.env.*
+!.env.example
+
+# Sauvegardes et dumps de base
+*.dump
+*.backup
+*.bak
+
+# Système et éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
