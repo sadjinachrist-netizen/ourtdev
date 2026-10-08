@@ -3,6 +3,18 @@
 .env.*
 !.env.example
 
+# Environnements Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
 # Sauvegardes et dumps de base
 *.dump
 *.backup
