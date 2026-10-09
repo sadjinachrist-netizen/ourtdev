@@ -1,6 +1,21 @@
-"""Modèles SQLAlchemy — auth.
+"""Réexport des modèles auth (bloc 1)."""
 
-À aligner sur database/01_schema.sql (lot suivant).
-"""
+from app.modules.users.models import (
+    MfaRecoveryCode,
+    OAuthAccount,
+    OneTimeToken,
+    RefreshToken,
+    User,
+    UserMfa,
+    UserStatus,
+)
 
-# from app.core.database import Base
+__all__ = [
+    "MfaRecoveryCode",
+    "OAuthAccount",
+    "OneTimeToken",
+    "RefreshToken",
+    "User",
+    "UserMfa",
+    "UserStatus",
+]

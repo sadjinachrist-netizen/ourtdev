@@ -10,7 +10,7 @@ async def test_health(client: AsyncClient) -> None:
     assert "env" in data
 
 
-async def test_auth_status_stub(client: AsyncClient) -> None:
+async def test_auth_status_ready(client: AsyncClient) -> None:
     response = await client.get("/api/v1/auth/status")
     assert response.status_code == 200
-    assert response.json()["module"] == "auth"
+    assert response.json()["status"] == "ready"

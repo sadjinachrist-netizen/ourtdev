@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Médias uploadés (API)
+api/storage/
+
 # Environnements Python
 .venv/
 venv/

@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app import __version__
 from app.core.config import get_settings
@@ -18,10 +21,26 @@ from app.shared.schemas import HealthResponse
 
 settings = get_settings()
 
+OPENAPI_TAGS = [
+    {"name": "health", "description": "Santé de l'API"},
+    {"name": "auth", "description": "Inscription, connexion, OAuth, MFA"},
+    {"name": "users", "description": "Compte courant et rôles"},
+    {"name": "settings", "description": "Paramètres du site"},
+    {"name": "media", "description": "Médiathèque"},
+    {"name": "contents", "description": "Pages, articles, partenaires, contact"},
+    {"name": "festival", "description": "Éditions Festival et redirections"},
+    {"name": "events", "description": "Événements et meetups"},
+    {"name": "programs", "description": "Programmes et chiffres clés"},
+    {"name": "members", "description": "Annuaire et profils membres"},
+    {"name": "projects", "description": "Projets open source"},
+    {"name": "resources", "description": "Ressources partagées"},
+]
+
 app = FastAPI(
     title=settings.app_name,
     version=__version__,
     description="API de la plateforme communautaire ourtdev.com (TDEV).",
+    openapi_tags=OPENAPI_TAGS,
 )
 
 app.add_middleware(
@@ -33,6 +52,10 @@ app.add_middleware(
 )
 
 register_exception_handlers(app)
+
+media_root = Path(settings.media_root)
+media_root.mkdir(parents=True, exist_ok=True)
+app.mount("/media", StaticFiles(directory=str(media_root)), name="media")
 
 api_v1 = APIRouter(prefix="/api/v1")
 

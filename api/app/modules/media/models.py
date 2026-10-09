@@ -1,6 +1,5 @@
-"""Modèles SQLAlchemy — media.
+"""Réexport des modèles média (bloc 1)."""
 
-À aligner sur database/01_schema.sql (lot suivant).
-"""
+from app.modules.users.models import MediaFile, MediaFileTranslation
 
-# from app.core.database import Base
+__all__ = ["MediaFile", "MediaFileTranslation"]

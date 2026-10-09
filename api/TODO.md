@@ -21,19 +21,19 @@ Sans ça, auth et back-office ne tiennent pas.
 - [x] Config `.env` + `.env.example` (`DATABASE_URL`, secrets JWT, etc.)
 - [x] Connexion PostgreSQL async (SQLAlchemy 2 + asyncpg)
 - [x] Healthcheck `GET /api/v1/health`
-- [ ] Modèles SQLAlchemy alignés sur `database/01_schema.sql`
-- [ ] Erreurs JSON homogènes + pagination + helper i18n (fallback `fr`)
-- [ ] Auth : register / login email + mot de passe
-- [ ] Auth : JWT access + refresh (hashés en base)
-- [ ] Auth : OAuth GitHub + Google **(M)**
-- [ ] Auth : vérification email / reset password (`one_time_tokens`)
-- [ ] MFA TOTP obligatoire pour les admins **(M)**
-- [ ] RBAC : dépendance `require_permission("…")` sur les 24 permissions seedées
-- [ ] Journal `activity_logs` (actions back-office, sans PII) **(S)**
-- [ ] `site_settings` lisibles / modifiables (admin) **(M)**
-- [ ] Module `media` : upload + enregistrement `media_files` **(M)**
-- [ ] OpenAPI documenté (tags par module) pour le front Next.js
-- [ ] Tests de base (health + auth)
+- [x] Modèles SQLAlchemy alignés sur `database/01_schema.sql` (bloc 1 socle)
+- [x] Erreurs JSON homogènes + pagination + helper i18n (fallback `fr`)
+- [x] Auth : register / login email + mot de passe
+- [x] Auth : JWT access + refresh (hashés en base)
+- [x] Auth : OAuth GitHub + Google **(M)**
+- [x] Auth : vérification email / reset password (`one_time_tokens`)
+- [x] MFA TOTP obligatoire pour les admins **(M)**
+- [x] RBAC : dépendance `require_permission("…")` sur les 24 permissions seedées
+- [x] Journal `activity_logs` (actions back-office, sans PII) **(S)**
+- [x] `site_settings` lisibles / modifiables (admin) **(M)**
+- [x] Module `media` : upload + enregistrement `media_files` **(M)**
+- [x] OpenAPI documenté (tags par module) pour le front Next.js
+- [x] Tests de base (health + auth)
 
 ---
 
@@ -211,7 +211,7 @@ Exposé pour le front « Back Stage », pas une UI ici.
 
 | Bloc | Statut |
 |---|---|
-| 0. Socle | ☐ |
+| 0. Socle | ☑ |
 | 1. Contenus / accueil | ☐ |
 | 2. Membres / annuaire | ☐ |
 | 3. Événements | ☐ |

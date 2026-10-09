@@ -11,7 +11,17 @@ Responsable : KPARA Gedeon. Authentification et rôles : SADJINA Christ.
 ## Prérequis
 
 - Python 3.11+
-- PostgreSQL (Docker Compose recommandé) avec `01_schema.sql` + `02_seed.sql` appliqués
+- Docker (PostgreSQL via Compose à la racine du repo)
+
+## Base de données
+
+Depuis la racine du monorepo :
+
+```bash
+docker compose up -d
+```
+
+Applique automatiquement `database/01_schema.sql` et `02_seed.sql`.
 
 ## Installation
 
@@ -20,7 +30,7 @@ cd api
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-# ou : pip install -e ".[dev]"
+pip install -e ".[dev]"     # pytest, ruff
 cp .env.example .env
 ```
 
@@ -32,11 +42,13 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 - Health : http://localhost:8000/api/v1/health
 - OpenAPI : http://localhost:8000/docs
+- Fichiers médias : http://localhost:8000/media/...
 
 ## Tests
 
 ```bash
-pytest
+# Postgres doit tourner (docker compose up -d)
+APP_ENV=test pytest
 ```
 
 ## Architecture
