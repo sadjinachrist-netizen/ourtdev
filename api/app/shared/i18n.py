@@ -1,4 +1,10 @@
+from __future__ import annotations
+
+from typing import TypeVar
+
 SUPPORTED_LANGUAGES = frozenset({"fr", "en"})
+
+T = TypeVar("T")
 
 
 def resolve_language(
@@ -20,3 +26,19 @@ def resolve_language(
                 return code
 
     return default if default in SUPPORTED_LANGUAGES else "fr"
+
+
+def pick_translation(
+    items: list[T],
+    lang: str,
+    *,
+    default: str = "fr",
+    attr: str = "language_code",
+) -> T | None:
+    """Choisit la traduction `lang`, sinon `default`, sinon la première."""
+    by_lang = {getattr(item, attr): item for item in items}
+    if lang in by_lang:
+        return by_lang[lang]
+    if default in by_lang:
+        return by_lang[default]
+    return items[0] if items else None
