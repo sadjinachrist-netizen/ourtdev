@@ -1,0 +1,797 @@
+{
+  "info": {
+    "name": "ourtdev API",
+    "description": "Collection Postman de l'API ourtdev.com — socle, module Contenus et module Membres.\n\nPrérequis : `docker compose up -d` puis `uvicorn app.main:app --reload --port 8000` dans `api/`.\n\n1. Lancer **Auth / Register** puis **Auth / Login** : les jetons sont enregistrés dans `accessToken` et `refreshToken`.\n2. **Compte / Me** enregistre `userId`.\n3. Les routes admin demandent un compte Éditeur (`page.manage`, `member.moderate`…) ou Administrateur (`settings.manage`, `member.export`, `pii.read`).\n\nLangue : query `lang=fr` ou `lang=en`. Le champ `website` des formulaires de contact est un honeypot : le laisser vide.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8000/api/v1"},
+    {"key": "accessToken", "value": ""},
+    {"key": "refreshToken", "value": ""},
+    {"key": "userId", "value": ""},
+    {"key": "pageId", "value": ""},
+    {"key": "articleId", "value": ""},
+    {"key": "articleSlug", "value": "premiere-actu"},
+    {"key": "teamId", "value": ""},
+    {"key": "partnerId", "value": ""},
+    {"key": "contactId", "value": ""},
+    {"key": "keyFigureId", "value": ""},
+    {"key": "mediaId", "value": ""},
+    {"key": "handle", "value": "awa-dev"},
+    {"key": "mfaTicket", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "Santé",
+      "item": [
+        {
+          "name": "Health",
+          "request": {"method": "GET", "url": "{{baseUrl}}/health"}
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Statut",
+          "request": {"method": "GET", "url": "{{baseUrl}}/auth/status"}
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('userId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"membre@example.com\",\n  \"password\": \"Secret123!\",\n  \"preferred_language\": \"fr\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register",
+            "description": "Crée un compte en attente. Le jeton de vérification est envoyé par email (affiché dans la console du serveur en dev)."
+          }
+        },
+        {
+          "name": "Verify email",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"token\": \"TOKEN_EMAIL\"\n}"},
+            "url": "{{baseUrl}}/auth/verify-email"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access_token) pm.collectionVariables.set('accessToken', json.access_token);",
+                  "if (json.refresh_token) pm.collectionVariables.set('refreshToken', json.refresh_token);",
+                  "if (json.mfa_ticket) pm.collectionVariables.set('mfaTicket', json.mfa_ticket);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"membre@example.com\",\n  \"password\": \"Secret123!\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login",
+            "description": "Un administrateur avec MFA activé reçoit mfa_required et mfa_ticket au lieu des jetons."
+          }
+        },
+        {
+          "name": "Refresh",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access_token) pm.collectionVariables.set('accessToken', json.access_token);",
+                  "if (json.refresh_token) pm.collectionVariables.set('refreshToken', json.refresh_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"},
+            "url": "{{baseUrl}}/auth/refresh"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"},
+            "url": "{{baseUrl}}/auth/logout"
+          }
+        },
+        {
+          "name": "Forgot password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"membre@example.com\"\n}"},
+            "url": "{{baseUrl}}/auth/forgot-password"
+          }
+        },
+        {
+          "name": "Reset password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"token\": \"TOKEN_RESET\",\n  \"new_password\": \"NouveauSecret123!\"\n}"},
+            "url": "{{baseUrl}}/auth/reset-password"
+          }
+        },
+        {
+          "name": "OAuth GitHub authorize",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/oauth/github/authorize",
+            "description": "503 si GITHUB_CLIENT_ID n'est pas configuré."
+          }
+        },
+        {
+          "name": "OAuth Google authorize",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/oauth/google/authorize",
+            "description": "503 si GOOGLE_CLIENT_ID n'est pas configuré."
+          }
+        },
+        {
+          "name": "OAuth callback",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/oauth/github/callback?code=CODE_OAUTH",
+            "description": "Remplacer github par google si besoin. Le code vient du fournisseur OAuth."
+          }
+        },
+        {
+          "name": "MFA setup",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/auth/mfa/setup",
+            "description": "Retourne le secret TOTP. Réservé ensuite à la connexion des administrateurs."
+          }
+        },
+        {
+          "name": "MFA enable",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"code\": \"123456\"\n}"},
+            "url": "{{baseUrl}}/auth/mfa/enable",
+            "description": "Code à 6 chiffres de l'application d'authentification. La réponse contient les codes de secours."
+          }
+        },
+        {
+          "name": "MFA verify",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access_token) pm.collectionVariables.set('accessToken', json.access_token);",
+                  "if (json.refresh_token) pm.collectionVariables.set('refreshToken', json.refresh_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"mfa_ticket\": \"{{mfaTicket}}\",\n  \"code\": \"123456\"\n}"},
+            "url": "{{baseUrl}}/auth/mfa/verify",
+            "description": "Après un login admin qui a renvoyé mfa_ticket. code = TOTP ou code de secours."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Compte",
+      "item": [
+        {
+          "name": "Statut",
+          "request": {"method": "GET", "url": "{{baseUrl}}/users/status"}
+        },
+        {
+          "name": "Me",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('userId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/users/me"
+          }
+        },
+        {
+          "name": "Settings publics",
+          "request": {"method": "GET", "url": "{{baseUrl}}/settings"}
+        },
+        {
+          "name": "Settings (admin)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/settings/all",
+            "description": "Permission settings.manage (administrateur)."
+          }
+        },
+        {
+          "name": "Modifier un setting",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"value\": \"TDEV\"\n}"},
+            "url": "{{baseUrl}}/settings/site_name",
+            "description": "Permission settings.manage. Remplacer site_name par la clé voulue."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Médias",
+      "item": [
+        {
+          "name": "Statut",
+          "request": {"method": "GET", "url": "{{baseUrl}}/media/status"}
+        },
+        {
+          "name": "Upload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('mediaId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {"key": "file", "type": "file", "src": ""},
+                {"key": "alt_text", "value": "Illustration", "type": "text"},
+                {"key": "language_code", "value": "fr", "type": "text"}
+              ]
+            },
+            "url": "{{baseUrl}}/media",
+            "description": "Permission media.manage. Types acceptés : image, pdf, texte, vidéo."
+          }
+        },
+        {
+          "name": "Métadonnées",
+          "request": {"method": "GET", "url": "{{baseUrl}}/media/{{mediaId}}"}
+        }
+      ]
+    },
+    {
+      "name": "Module 1 — Contenus",
+      "item": [
+        {
+          "name": "Statut",
+          "request": {"method": "GET", "url": "{{baseUrl}}/contents/status"}
+        },
+        {
+          "name": "Accueil",
+          "request": {"method": "GET", "url": "{{baseUrl}}/home?lang=fr"}
+        },
+        {
+          "name": "Page publique",
+          "request": {"method": "GET", "url": "{{baseUrl}}/pages/a-propos?lang=fr"}
+        },
+        {
+          "name": "Page publique EN",
+          "request": {"method": "GET", "url": "{{baseUrl}}/pages/a-propos?lang=en"}
+        },
+        {
+          "name": "Équipe",
+          "request": {"method": "GET", "url": "{{baseUrl}}/team?lang=fr"}
+        },
+        {
+          "name": "Partenaires",
+          "request": {"method": "GET", "url": "{{baseUrl}}/partners?lang=fr"}
+        },
+        {
+          "name": "Articles",
+          "request": {"method": "GET", "url": "{{baseUrl}}/articles?lang=fr"}
+        },
+        {
+          "name": "Article",
+          "request": {"method": "GET", "url": "{{baseUrl}}/articles/{{articleSlug}}?lang=fr"}
+        },
+        {
+          "name": "Contact",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ada\",\n  \"email\": \"ada@example.com\",\n  \"subject\": \"Bonjour\",\n  \"message\": \"Message de contact\",\n  \"website\": \"\"\n}"
+            },
+            "url": "{{baseUrl}}/contact",
+            "description": "website doit rester vide (honeypot). Limite : 5 messages / 10 min / IP."
+          }
+        },
+        {
+          "name": "Admin — lister les pages",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/pages",
+            "description": "Permission page.manage."
+          }
+        },
+        {
+          "name": "Admin — créer une page",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('pageId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"nouvelle-page\",\n  \"status\": \"draft\",\n  \"translations\": [\n    {\"language_code\": \"fr\", \"title\": \"Nouvelle page\", \"body\": \"Contenu\"},\n    {\"language_code\": \"en\", \"title\": \"New page\", \"body\": \"Content\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/pages"
+          }
+        },
+        {
+          "name": "Admin — modifier une page",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"translations\": [\n    {\"language_code\": \"fr\", \"title\": \"Page mise à jour\", \"body\": \"Contenu\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/pages/{{pageId}}"
+          }
+        },
+        {
+          "name": "Admin — publier une page",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/pages/{{pageId}}/publish"
+          }
+        },
+        {
+          "name": "Admin — créer un membre d'équipe",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('teamId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Awa Koffi\",\n  \"team_group\": \"board\",\n  \"position\": 1,\n  \"translations\": [\n    {\"language_code\": \"fr\", \"role_title\": \"Présidente\", \"bio\": \"Membre du bureau\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/team"
+          }
+        },
+        {
+          "name": "Admin — modifier un membre d'équipe",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"translations\": [\n    {\"language_code\": \"fr\", \"role_title\": \"Trésorière\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/team/{{teamId}}"
+          }
+        },
+        {
+          "name": "Admin — créer un partenaire",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('partnerId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"partenaire-demo\",\n  \"name\": \"Partenaire démo\",\n  \"website_url\": \"https://example.com\",\n  \"show_on_home\": true,\n  \"description_fr\": \"Partenaire\",\n  \"description_en\": \"Partner\"\n}"
+            },
+            "url": "{{baseUrl}}/admin/partners",
+            "description": "Permission partner.manage."
+          }
+        },
+        {
+          "name": "Admin — modifier un partenaire",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"show_on_home\": true\n}"},
+            "url": "{{baseUrl}}/admin/partners/{{partnerId}}"
+          }
+        },
+        {
+          "name": "Admin — créer un article",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('articleId', json.id);",
+                  "if (json.slug) pm.collectionVariables.set('articleSlug', json.slug);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"premiere-actu\",\n  \"status\": \"published\",\n  \"published_at\": \"2026-01-01T00:00:00Z\",\n  \"translations\": [\n    {\n      \"language_code\": \"fr\",\n      \"title\": \"Première actu\",\n      \"summary\": \"Extrait\",\n      \"body\": \"Contenu\"\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/articles",
+            "description": "Permission article.manage."
+          }
+        },
+        {
+          "name": "Admin — modifier un article",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"translations\": [\n    {\"language_code\": \"fr\", \"title\": \"Actu mise à jour\", \"body\": \"Contenu\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/articles/{{articleId}}"
+          }
+        },
+        {
+          "name": "Admin — messages de contact",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (Array.isArray(json) && json.length && json[0].id) pm.collectionVariables.set('contactId', json[0].id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/contact",
+            "description": "Permission contact.read."
+          }
+        },
+        {
+          "name": "Admin — statut d'un message",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"status\": \"handled\"\n}"},
+            "url": "{{baseUrl}}/admin/contact/{{contactId}}",
+            "description": "Statuts : new, read, handled, spam."
+          }
+        },
+        {
+          "name": "Admin — chiffres clés",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (Array.isArray(json) && json.length) pm.collectionVariables.set('keyFigureId', String(json[0].id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/key-figures?lang=fr",
+            "description": "Permission key_figure.manage."
+          }
+        },
+        {
+          "name": "Admin — modifier un chiffre clé",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"label_fr\": \"Membres\",\n  \"label_en\": \"Members\"\n}"},
+            "url": "{{baseUrl}}/admin/key-figures/{{keyFigureId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Module 2 — Membres",
+      "item": [
+        {
+          "name": "Statut",
+          "request": {"method": "GET", "url": "{{baseUrl}}/members/status"}
+        },
+        {
+          "name": "Compétences",
+          "request": {"method": "GET", "url": "{{baseUrl}}/technologies"}
+        },
+        {
+          "name": "Admin — créer une compétence",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"slug\": \"python\",\n  \"name\": \"Python\",\n  \"category\": \"langage\"\n}"},
+            "url": "{{baseUrl}}/admin/technologies",
+            "description": "Permission member.moderate. name est unique."
+          }
+        },
+        {
+          "name": "Créer ou modifier mon profil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.handle) pm.collectionVariables.set('handle', json.handle);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"handle\": \"awa-dev\",\n  \"display_name\": \"Awa Dev\",\n  \"title\": \"Développeuse Flutter\",\n  \"bio\": \"Membre TDEV\",\n  \"city\": \"Lome\",\n  \"country_code\": \"TG\",\n  \"member_status\": \"professional\",\n  \"availability\": \"open\",\n  \"github_url\": \"https://github.com/awa\",\n  \"visibility\": \"public\",\n  \"listed_in_directory\": true,\n  \"show_location\": true,\n  \"show_links\": true,\n  \"allow_contact\": true,\n  \"technologies\": [{\"slug\": \"python\", \"level\": 4}]\n}"
+            },
+            "url": "{{baseUrl}}/members/me",
+            "description": "Permission profile.edit_own. visibility : public, members ou private."
+          }
+        },
+        {
+          "name": "Mon profil",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/members/me?lang=fr"
+          }
+        },
+        {
+          "name": "Annuaire",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/directory?lang=fr&q=awa&technology=python&city=Lome&country_code=TG&member_status=professional&page=1&page_size=20",
+            "description": "Sans jeton, seuls les profils public sont listés. Un membre connecté voit aussi visibility=members."
+          }
+        },
+        {
+          "name": "Profil public",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/directory/{{handle}}?lang=fr",
+            "description": "N'expose ni email ni données personnelles. Ville et liens masqués si show_location / show_links sont faux."
+          }
+        },
+        {
+          "name": "Contacter un membre",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ada\",\n  \"email\": \"ada@example.com\",\n  \"subject\": \"Collab\",\n  \"message\": \"Bonjour\",\n  \"website\": \"\"\n}"
+            },
+            "url": "{{baseUrl}}/directory/{{handle}}/contact",
+            "description": "Réservé aux profils allow_contact. L'email du destinataire n'est jamais renvoyé. website = honeypot."
+          }
+        },
+        {
+          "name": "Lire mes données personnelles",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/members/me/pii"
+          }
+        },
+        {
+          "name": "Modifier mes données personnelles",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Awa\",\n  \"last_name\": \"Koffi\",\n  \"phone\": \"+22890000000\"\n}"
+            },
+            "url": "{{baseUrl}}/members/me/pii",
+            "description": "Jamais exposé sur l'annuaire public."
+          }
+        },
+        {
+          "name": "Mon tableau de bord",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/members/me/dashboard"
+          }
+        },
+        {
+          "name": "Admin — valider une inscription",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/members/{{userId}}/approve",
+            "description": "Permission member.approve. userId = le compte à valider, pas forcément le compte connecté."
+          }
+        },
+        {
+          "name": "Admin — masquer un profil",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"hidden\": true\n}"},
+            "url": "{{baseUrl}}/admin/members/{{userId}}/visibility",
+            "description": "Permission member.moderate. hidden=false réaffiche le profil."
+          }
+        },
+        {
+          "name": "Admin — attribuer un badge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"code\": \"contributor\",\n  \"edition_year\": null\n}"},
+            "url": "{{baseUrl}}/admin/members/{{userId}}/badges",
+            "description": "Codes seed : lead, contributor, speaker, festival_alumni. edition_year pour speaker."
+          }
+        },
+        {
+          "name": "Admin — PII d'un membre",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/members/{{userId}}/pii",
+            "description": "Permission pii.read (administrateur)."
+          }
+        },
+        {
+          "name": "Admin — export CSV",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/members/export",
+            "description": "Permission member.export. Les colonnes prénom, nom et téléphone ne sont remplies qu'avec pii.read."
+          }
+        }
+      ]
+    }
+  ]
+}

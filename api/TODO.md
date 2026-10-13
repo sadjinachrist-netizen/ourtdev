@@ -67,22 +67,22 @@ Tables : `member_profiles`, `member_pii`, `technologies`, `member_technologies`,
 
 ### Important (M)
 
-- [ ] Inscription + validation selon `site_settings.member_validation` (`email` / `admin` / `both`)
-- [ ] Profil membre : handle, photo, ville/pays, titre, bio, compétences, liens, statut
-- [ ] Consentement annuaire (`listed_in_directory` + `directory_consent_at`)
-- [ ] Annuaire public : recherche + filtres (compétence, ville, pays, statut)
-- [ ] Respect visibilité : `visibility`, `show_location`, `show_links`, `hidden_at`
-- [ ] **Jamais** exposer `member_pii` ni email sur routes publiques
+- [x] Inscription + validation selon `site_settings.member_validation` (`email` / `admin` / `both`)
+- [x] Profil membre : handle, photo, ville/pays, titre, bio, compétences, liens, statut
+- [x] Consentement annuaire (`listed_in_directory` + `directory_consent_at`)
+- [x] Annuaire public : recherche + filtres (compétence, ville, pays, statut)
+- [x] Respect visibilité : `visibility`, `show_location`, `show_links`, `hidden_at`
+- [x] **Jamais** exposer `member_pii` ni email sur routes publiques
 
 ### Important ensuite (S)
 
-- [ ] Badges (Lead, contributeur, speaker, alumni) **(S)**
-- [ ] Dashboard membre : mes events / ressources / projets **(S)**
-- [ ] Export CSV membres (admin, `member.export`) **(S)**
+- [x] Badges (Lead, contributeur, speaker, alumni) **(S)**
+- [x] Dashboard membre : mes events / ressources / projets **(S)**
+- [x] Export CSV membres (admin, `member.export`) **(S)**
 
 ### Plus tard (C)
 
-- [ ] Contact membre via formulaire sans exposer l’email (`member_messages`) **(C)**
+- [x] Contact membre via formulaire sans exposer l’email (`member_messages`) **(C)**
 
 ---
 
@@ -213,7 +213,7 @@ Exposé pour le front « Back Stage », pas une UI ici.
 |---|---|
 | 0. Socle | ☑ |
 | 1. Contenus / accueil | ☑ |
-| 2. Membres / annuaire | ☐ |
+| 2. Membres / annuaire | ☑ |
 | 3. Événements | ☐ |
 | 4. Festival | ☐ |
 | 5. Projets | ☐ |

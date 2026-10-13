@@ -356,7 +356,12 @@ class ContentsService:
         ]
 
     async def upsert_page_translations(self, page: Page, translations: list[TranslationIn]) -> None:
-        existing = {t.language_code: t for t in page.translations}
+        rows = (
+            await self.db.execute(
+                select(PageTranslation).where(PageTranslation.page_id == page.id)
+            )
+        ).scalars().all()
+        existing = {t.language_code: t for t in rows}
         for tr in translations:
             if tr.language_code in existing:
                 row = existing[tr.language_code]
@@ -366,8 +371,9 @@ class ContentsService:
                 row.meta_title = tr.meta_title
                 row.meta_description = tr.meta_description
             else:
-                page.translations.append(
+                self.db.add(
                     PageTranslation(
+                        page_id=page.id,
                         language_code=tr.language_code,
                         title=tr.title,
                         summary=tr.summary,

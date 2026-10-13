@@ -83,6 +83,21 @@ async def get_current_user(
 CurrentAuth = Annotated[AuthContext, Depends(get_current_user)]
 
 
+async def get_optional_user(
+    db: DbSession,
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
+) -> AuthContext | None:
+    if credentials is None:
+        return None
+    try:
+        return await get_current_user(db, credentials)
+    except HTTPException:
+        return None
+
+
+OptionalAuth = Annotated[AuthContext | None, Depends(get_optional_user)]
+
+
 def require_permission(code: str) -> Callable:
     async def _dependency(auth: CurrentAuth) -> AuthContext:
         if not auth.has_permission(code):
