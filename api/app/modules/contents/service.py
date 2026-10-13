@@ -222,12 +222,16 @@ class ContentsService:
             )
         ).scalars().all()
 
+        from app.modules.festival.announcements import active_announcements
+
+        announcements = await active_announcements(self.db, lang)
         return HomeOut(
             page=self._page_out(page, lang) if page else None,
             key_figures=[f for fig in figures if (f := self._figure_out(fig, lang))],
             partners=[self._partner_out(p, lang) for p in partners],
             upcoming_events=[e for ev in events if (e := self._event_out(ev, lang))],
             latest_articles=[a for art in articles if (a := self._article_out(art, lang))],
+            announcements=announcements,
         )
 
     async def get_page(self, slug: str, lang: str, *, public: bool = True) -> PageOut:

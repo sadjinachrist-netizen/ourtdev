@@ -9,6 +9,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, EmailStr, Field
 
+from app.modules.festival.schemas import AnnouncementOut
+
 ContentStatusLiteral = Literal["draft", "in_review", "published", "archived"]
 
 
@@ -230,6 +232,7 @@ class HomeOut(BaseModel):
     partners: list[PartnerOut]
     upcoming_events: list[EventTeaserOut]
     latest_articles: list[ArticleOut]
+    announcements: list["AnnouncementOut"] = []
 
 
 class MessageResponse(BaseModel):

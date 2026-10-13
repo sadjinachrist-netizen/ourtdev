@@ -21,6 +21,8 @@
     {"key": "eventId", "value": ""},
     {"key": "eventSlug", "value": "meetup-lome"},
     {"key": "speakerId", "value": ""},
+    {"key": "editionYear", "value": "2027"},
+    {"key": "announcementId", "value": ""},
     {"key": "mfaTicket", "value": ""}
   ],
   "item": [
@@ -960,6 +962,155 @@
             "body": {"mode": "raw", "raw": "{\n  \"partner_id\": \"{{partnerId}}\"\n}"},
             "url": "{{baseUrl}}/admin/events/{{eventId}}/partners",
             "description": "Créer d'abord le partenaire dans le module Contenus pour remplir partnerId."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Module 4 — Festival",
+      "item": [
+        {
+          "name": "Statut",
+          "request": {"method": "GET", "url": "{{baseUrl}}/festival/status"}
+        },
+        {
+          "name": "Page festival",
+          "request": {"method": "GET", "url": "{{baseUrl}}/festival?lang=fr"}
+        },
+        {
+          "name": "Édition en cours",
+          "request": {"method": "GET", "url": "{{baseUrl}}/festival/current?lang=fr"}
+        },
+        {
+          "name": "Édition par année",
+          "request": {"method": "GET", "url": "{{baseUrl}}/festival/{{editionYear}}?lang=fr"}
+        },
+        {
+          "name": "Aller au lien de l'édition",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/festival/{{editionYear}}/go",
+            "description": "Répond 301 vers target_url et incrémente hit_count."
+          }
+        },
+        {
+          "name": "Annonces actives",
+          "request": {"method": "GET", "url": "{{baseUrl}}/festival/announcements?lang=fr"}
+        },
+        {
+          "name": "Résoudre une redirection",
+          "request": {"method": "GET", "url": "{{baseUrl}}/redirects/resolve?path=/festival/{{editionYear}}"}
+        },
+        {
+          "name": "Admin — créer une édition",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.year) pm.collectionVariables.set('editionYear', String(json.year));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"year\": 2027,\n  \"starts_on\": \"2027-11-20\",\n  \"ends_on\": \"2027-11-22\",\n  \"city\": \"Lomé\",\n  \"venue\": \"Campus\",\n  \"is_current\": true,\n  \"target_url\": \"https://festival.example/2027\",\n  \"translations\": [\n    {\"language_code\": \"fr\", \"theme\": \"Thème 2027\", \"summary\": \"Résumé\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/festival/editions",
+            "description": "Permission festival.manage. Une seule édition is_current."
+          }
+        },
+        {
+          "name": "Admin — modifier le lien",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"target_url\": \"https://festival.example/2027\"\n}"},
+            "url": "{{baseUrl}}/admin/festival/editions/{{editionYear}}"
+          }
+        },
+        {
+          "name": "Admin — publier",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/festival/editions/{{editionYear}}/publish"
+          }
+        },
+        {
+          "name": "Admin — chiffre de l'édition",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"visiteurs\",\n  \"value\": 800,\n  \"suffix\": \"+\",\n  \"label_fr\": \"Visiteurs\",\n  \"label_en\": \"Visitors\"\n}"
+            },
+            "url": "{{baseUrl}}/admin/festival/editions/{{editionYear}}/figures"
+          }
+        },
+        {
+          "name": "Admin — créer une annonce",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('announcementId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"edition_year\": {{editionYear}},\n  \"kind\": \"registration\",\n  \"cta_url\": \"https://festival.example/inscription\",\n  \"starts_at\": \"2026-10-01T00:00:00Z\",\n  \"ends_at\": \"2027-11-01T00:00:00Z\",\n  \"translations\": [\n    {\"language_code\": \"fr\", \"message\": \"Inscriptions ouvertes\", \"cta_label\": \"Je m'inscris\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/festival/announcements",
+            "description": "kind : registration, call_for_speakers, ticketing, other."
+          }
+        },
+        {
+          "name": "Admin — modifier une annonce",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"is_active\": false\n}"},
+            "url": "{{baseUrl}}/admin/festival/announcements/{{announcementId}}"
+          }
+        },
+        {
+          "name": "Admin — redirections",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/redirects",
+            "description": "Permission settings.manage (administrateur)."
           }
         }
       ]

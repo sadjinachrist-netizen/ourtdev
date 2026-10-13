@@ -116,16 +116,16 @@ Tables : `festival_editions`, `announcements`, `redirects`
 
 ### Important (M)
 
-- [ ] Page / liste Festival : édition en cours (`is_current`)
-- [ ] Archive des éditions (année, thème, dates, chiffres, lien)
-- [ ] `target_url` par édition modifiable (back-office, sans toucher au code)
-- [ ] Résolution `/festival/{année}` → `target_url`
-- [ ] Annonces actives pour bandeau accueil (inscriptions, speakers, billetterie)
+- [x] Page / liste Festival : édition en cours (`is_current`)
+- [x] Archive des éditions (année, thème, dates, chiffres, lien)
+- [x] `target_url` par édition modifiable (back-office, sans toucher au code)
+- [x] Résolution `/festival/{année}` → `target_url`
+- [x] Annonces actives pour bandeau accueil (inscriptions, speakers, billetterie)
 
 ### Important ensuite (S)
 
-- [ ] Redirections 301 (`redirects`) quand un lien d’édition change **(S)**
-- [ ] Compteur `hit_count` sur redirects **(S)**
+- [x] Redirections 301 (`redirects`) quand un lien d’édition change **(S)**
+- [x] Compteur `hit_count` sur redirects **(S)**
 
 ---
 
@@ -215,7 +215,7 @@ Exposé pour le front « Back Stage », pas une UI ici.
 | 1. Contenus / accueil | ☑ |
 | 2. Membres / annuaire | ☑ |
 | 3. Événements | ☑ |
-| 4. Festival | ☐ |
+| 4. Festival | ☑ |
 | 5. Projets | ☐ |
 | 6. Ressources | ☐ |
 | 7. Programmes | ☐ |

@@ -6,7 +6,7 @@ OpenAPI interactive : http://localhost:8000/docs
 Collection Postman : [`postman/ourtdev-api.postman_collection.json`](postman/ourtdev-api.postman_collection.json)  
 Checklist : [`TODO.md`](TODO.md)
 
-Branche en cours du module 3 : `feat/module-3-events`.
+Branche en cours du module 4 : `feat/module-4-festival`.
 
 ## État
 
@@ -16,7 +16,8 @@ Branche en cours du module 3 : `feat/module-3-events`.
 | Module 1 — Contenus | Fait |
 | Module 2 — Membres / annuaire | Fait |
 | Module 3 — Événements | Fait |
-| Modules 4 à 7 (festival, projets, ressources, programmes) | Pas faits. Seule la route `GET /…/status` répond `not_implemented`. |
+| Module 4 — Festival | Fait |
+| Modules 5 à 7 (projets, ressources, programmes) | Pas faits. Seule la route `GET /…/status` répond `not_implemented`. |
 
 Les tests (`APP_ENV=test pytest`, PostgreSQL allumé) couvrent ces quatre blocs.
 
@@ -180,6 +181,39 @@ Deux limites :
 - `participants_count` et `sessions_count` sont saisis à la main. Ils n'apparaissent sur la fiche que si `show_stats` est vrai. Ils ne sont pas calculés depuis les inscriptions.
 - Le dossier de ressources est créé, mais les fichiers et liens à l'intérieur (module 6) ne sont pas encore codés.
 
+## Module 4 — Festival
+
+Fichiers du module, un sujet par fichier : `edition_read.py`, `edition_write.py`, `announcements.py`, `redirects.py`. Les routes publiques et admin sont séparées.
+
+Public :
+
+| Méthode | Route | Détail |
+|---|---|---|
+| GET | `/festival` | Édition en cours + archive |
+| GET | `/festival/current` | Édition `is_current` publiée |
+| GET | `/festival/{année}` | Thème, dates, lieu, chiffres, `target_url` |
+| GET | `/festival/{année}/go` | Redirection 301 vers `target_url`, compteur +1 |
+| GET | `/festival/announcements` | Bandeau actif. Aussi inclus dans `GET /home` |
+| GET | `/redirects/resolve?path=` | Redirection du chemin, compteur +1 |
+
+Une édition publique a `status=published` et `published_at` passé. Une seule édition peut être `is_current`.
+
+Admin (`festival.manage`, l'éditeur l'a) :
+
+| Méthode | Route |
+|---|---|
+| POST | `/admin/festival/editions` |
+| PATCH | `/admin/festival/editions/{année}` |
+| POST | `/admin/festival/editions/{année}/publish` |
+| POST | `/admin/festival/editions/{année}/figures` |
+| POST, PATCH | `/admin/festival/announcements` |
+
+Changer `target_url` met à jour la redirection `/festival/{année}`. Si l'ancien lien était un chemin du site (`/billets-2026`), ce chemin redirige vers la nouvelle URL.
+
+Les redirections manuelles (`settings.manage`, administrateur) : `GET/POST /admin/redirects`, `PATCH /admin/redirects/{id}`.
+
+Annonces : `registration`, `call_for_speakers`, `ticketing`, `other`. Visibles seulement entre `starts_at` et `ends_at`, et si l'édition liée est publiée.
+
 ## Pas encore fait
 
-Festival, projets open source, ressources (hors le dossier créé par un événement) et programmes. Leurs routes `/status` répondent, le reste non.
+Projets open source, ressources (hors le dossier créé par un événement) et programmes. Leurs routes `/status` répondent, le reste non.
