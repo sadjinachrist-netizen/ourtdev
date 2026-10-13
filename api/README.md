@@ -6,6 +6,7 @@ Responsable : KPARA Gedeon. Authentification et rôles : SADJINA Christ.
 
 - Règles agents / conventions : [`rules.md`](rules.md)
 - Checklist modules : [`TODO.md`](TODO.md)
+- Guide de l'API déjà livrée : [`DOC.md`](DOC.md)
 - Collection Postman : [`postman/ourtdev-api.postman_collection.json`](postman/ourtdev-api.postman_collection.json)
 - Schéma PostgreSQL : [`../database/README.md`](../database/README.md)
 
