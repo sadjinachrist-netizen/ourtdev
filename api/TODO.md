@@ -92,21 +92,21 @@ Tables : `events`, `event_translations`, `event_media`, `speakers`, `event_speak
 
 ### Important (M)
 
-- [ ] Liste événements à venir / passés
-- [ ] Filtres : type, année, ville, onsite/online/hybrid
-- [ ] Fiche événement : titre, date, lieu, description, speakers, partenaires, galerie, replay, inscription
-- [ ] Lien automatique événement → dossier ressources (module 6)
-- [ ] Visibilité : `published` + `published_at <= now()`
-- [ ] Lead : proposer un event limité à sa `community_id` (`event.propose`)
+- [x] Liste événements à venir / passés
+- [x] Filtres : type, année, ville, onsite/online/hybrid
+- [x] Fiche événement : titre, date, lieu, description, speakers, partenaires, galerie, replay, inscription
+- [x] Lien automatique événement → dossier ressources (module 6)
+- [x] Visibilité : `published` + `published_at <= now()`
+- [x] Lead : proposer un event limité à sa `community_id` (`event.propose`)
 
 ### Important ensuite (S)
 
-- [ ] Frise chronologique (`show_in_timeline`) **(S)**
-- [ ] Export / lien calendrier `.ics` **(S)**
+- [x] Frise chronologique (`show_in_timeline`) **(S)**
+- [x] Export / lien calendrier `.ics` **(S)**
 
 ### Plus tard (C)
 
-- [ ] Stats participants / sessions (`show_stats`) **(C)**
+- [x] Stats participants / sessions (`show_stats`) **(C)**
 
 ---
 
@@ -214,7 +214,7 @@ Exposé pour le front « Back Stage », pas une UI ici.
 | 0. Socle | ☑ |
 | 1. Contenus / accueil | ☑ |
 | 2. Membres / annuaire | ☑ |
-| 3. Événements | ☐ |
+| 3. Événements | ☑ |
 | 4. Festival | ☐ |
 | 5. Projets | ☐ |
 | 6. Ressources | ☐ |

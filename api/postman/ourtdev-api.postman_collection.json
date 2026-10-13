@@ -18,6 +18,9 @@
     {"key": "keyFigureId", "value": ""},
     {"key": "mediaId", "value": ""},
     {"key": "handle", "value": "awa-dev"},
+    {"key": "eventId", "value": ""},
+    {"key": "eventSlug", "value": "meetup-lome"},
+    {"key": "speakerId", "value": ""},
     {"key": "mfaTicket", "value": ""}
   ],
   "item": [
@@ -789,6 +792,174 @@
             "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
             "url": "{{baseUrl}}/admin/members/export",
             "description": "Permission member.export. Les colonnes prénom, nom et téléphone ne sont remplies qu'avec pii.read."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Module 3 — Événements",
+      "item": [
+        {
+          "name": "Statut",
+          "request": {"method": "GET", "url": "{{baseUrl}}/events/status"}
+        },
+        {
+          "name": "Liste",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events?lang=fr&when=upcoming&type=meetup&year=2027&city=Lome&format=onsite&page=1&page_size=20",
+            "description": "when = upcoming, past ou all. format = onsite, online ou hybrid."
+          }
+        },
+        {
+          "name": "Frise",
+          "request": {"method": "GET", "url": "{{baseUrl}}/events/timeline?lang=fr"}
+        },
+        {
+          "name": "Fiche",
+          "request": {"method": "GET", "url": "{{baseUrl}}/events/{{eventSlug}}?lang=fr"}
+        },
+        {
+          "name": "Calendrier ICS",
+          "request": {"method": "GET", "url": "{{baseUrl}}/events/{{eventSlug}}/calendar.ics"}
+        },
+        {
+          "name": "S'inscrire",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"role\": \"attendee\"\n}"},
+            "url": "{{baseUrl}}/events/{{eventSlug}}/register",
+            "description": "role : attendee, volunteer ou organizer. Réservé à un compte connecté."
+          }
+        },
+        {
+          "name": "Admin — créer ou proposer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('eventId', json.id);",
+                  "if (json.slug) pm.collectionVariables.set('eventSlug', json.slug);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"meetup-lome\",\n  \"type\": \"meetup\",\n  \"format\": \"onsite\",\n  \"starts_at\": \"2027-06-15T18:00:00Z\",\n  \"ends_at\": \"2027-06-15T20:00:00Z\",\n  \"city\": \"Lome\",\n  \"venue\": \"Campus\",\n  \"country_code\": \"TG\",\n  \"registration_url\": \"https://example.com/inscription\",\n  \"replay_url\": \"https://example.com/replay\",\n  \"show_in_timeline\": true,\n  \"status\": \"draft\",\n  \"translations\": [\n    {\n      \"language_code\": \"fr\",\n      \"title\": \"Meetup Lomé\",\n      \"summary\": \"Résumé\",\n      \"description\": \"Description\"\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/events",
+            "description": "event.manage publie. event.propose (lead) reste en brouillon ou en revue, limité à sa communauté (community_id)."
+          }
+        },
+        {
+          "name": "Admin — modifier",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"show_stats\": true,\n  \"participants_count\": 40,\n  \"sessions_count\": 3\n}"
+            },
+            "url": "{{baseUrl}}/admin/events/{{eventId}}",
+            "description": "Les compteurs publics n'apparaissent que si show_stats est vrai. Réservé à event.manage."
+          }
+        },
+        {
+          "name": "Admin — publier",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/admin/events/{{eventId}}/publish",
+            "description": "Permission event.manage. Crée le dossier ressources lié à l'événement."
+          }
+        },
+        {
+          "name": "Admin — créer un intervenant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('speakerId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Awa Koffi\",\n  \"organization\": \"TDEV\",\n  \"translations\": [\n    {\"language_code\": \"fr\", \"job_title\": \"Développeuse\", \"bio\": \"Intervenante\"}\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/admin/speakers"
+          }
+        },
+        {
+          "name": "Admin — associer un intervenant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speaker_id\": \"{{speakerId}}\",\n  \"role\": \"speaker\",\n  \"position\": 1\n}"
+            },
+            "url": "{{baseUrl}}/admin/events/{{eventId}}/speakers",
+            "description": "role : speaker, panelist, moderator ou trainer."
+          }
+        },
+        {
+          "name": "Admin — galerie",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kind\": \"video\",\n  \"url\": \"https://example.com/video\",\n  \"position\": 1\n}"
+            },
+            "url": "{{baseUrl}}/admin/events/{{eventId}}/media",
+            "description": "kind : photo ou video. media_id ou url."
+          }
+        },
+        {
+          "name": "Admin — associer un partenaire",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {"mode": "raw", "raw": "{\n  \"partner_id\": \"{{partnerId}}\"\n}"},
+            "url": "{{baseUrl}}/admin/events/{{eventId}}/partners",
+            "description": "Créer d'abord le partenaire dans le module Contenus pour remplir partnerId."
           }
         }
       ]
