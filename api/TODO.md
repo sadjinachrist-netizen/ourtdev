@@ -43,17 +43,17 @@ Tables : `pages`, `team_members`, `partners`, `partner_levels`, `articles`, `art
 
 ### Important (M)
 
-- [ ] Lecture publique page d’accueil (chiffres clés, prochains events, dernières actus — agrégation)
-- [ ] CRUD / lecture pages (`accueil`, `a-propos`, `contact`, etc.) bilingue
-- [ ] Page À propos : équipe / bureau (`team_members`)
-- [ ] Partenaires : liste + niveaux + logos **(M)**
-- [ ] Contact : `POST` message + anti-spam (captcha / rate limit) **(M)**
-- [ ] i18n FR/EN sur tous les contenus de ce module **(M)**
+- [x] Lecture publique page d’accueil (chiffres clés, prochains events, dernières actus — agrégation)
+- [x] CRUD / lecture pages (`accueil`, `a-propos`, `contact`, etc.) bilingue
+- [x] Page À propos : équipe / bureau (`team_members`)
+- [x] Partenaires : liste + niveaux + logos **(M)**
+- [x] Contact : `POST` message + anti-spam (captcha / rate limit) **(M)**
+- [x] i18n FR/EN sur tous les contenus de ce module **(M)**
 
 ### Important ensuite (S)
 
-- [ ] Blog / actualités : liste, fiche, catégories, tags **(S)**
-- [ ] Admin : workflow `draft → in_review → published` + `published_at` **(S)**
+- [x] Blog / actualités : liste, fiche, catégories, tags **(S)**
+- [x] Admin : workflow `draft → in_review → published` + `published_at` **(S)**
 
 ### Plus tard (C)
 
@@ -67,22 +67,22 @@ Tables : `member_profiles`, `member_pii`, `technologies`, `member_technologies`,
 
 ### Important (M)
 
-- [ ] Inscription + validation selon `site_settings.member_validation` (`email` / `admin` / `both`)
-- [ ] Profil membre : handle, photo, ville/pays, titre, bio, compétences, liens, statut
-- [ ] Consentement annuaire (`listed_in_directory` + `directory_consent_at`)
-- [ ] Annuaire public : recherche + filtres (compétence, ville, pays, statut)
-- [ ] Respect visibilité : `visibility`, `show_location`, `show_links`, `hidden_at`
-- [ ] **Jamais** exposer `member_pii` ni email sur routes publiques
+- [x] Inscription + validation selon `site_settings.member_validation` (`email` / `admin` / `both`)
+- [x] Profil membre : handle, photo, ville/pays, titre, bio, compétences, liens, statut
+- [x] Consentement annuaire (`listed_in_directory` + `directory_consent_at`)
+- [x] Annuaire public : recherche + filtres (compétence, ville, pays, statut)
+- [x] Respect visibilité : `visibility`, `show_location`, `show_links`, `hidden_at`
+- [x] **Jamais** exposer `member_pii` ni email sur routes publiques
 
 ### Important ensuite (S)
 
-- [ ] Badges (Lead, contributeur, speaker, alumni) **(S)**
-- [ ] Dashboard membre : mes events / ressources / projets **(S)**
-- [ ] Export CSV membres (admin, `member.export`) **(S)**
+- [x] Badges (Lead, contributeur, speaker, alumni) **(S)**
+- [x] Dashboard membre : mes events / ressources / projets **(S)**
+- [x] Export CSV membres (admin, `member.export`) **(S)**
 
 ### Plus tard (C)
 
-- [ ] Contact membre via formulaire sans exposer l’email (`member_messages`) **(C)**
+- [x] Contact membre via formulaire sans exposer l’email (`member_messages`) **(C)**
 
 ---
 
@@ -92,21 +92,21 @@ Tables : `events`, `event_translations`, `event_media`, `speakers`, `event_speak
 
 ### Important (M)
 
-- [ ] Liste événements à venir / passés
-- [ ] Filtres : type, année, ville, onsite/online/hybrid
-- [ ] Fiche événement : titre, date, lieu, description, speakers, partenaires, galerie, replay, inscription
-- [ ] Lien automatique événement → dossier ressources (module 6)
-- [ ] Visibilité : `published` + `published_at <= now()`
-- [ ] Lead : proposer un event limité à sa `community_id` (`event.propose`)
+- [x] Liste événements à venir / passés
+- [x] Filtres : type, année, ville, onsite/online/hybrid
+- [x] Fiche événement : titre, date, lieu, description, speakers, partenaires, galerie, replay, inscription
+- [x] Lien automatique événement → dossier ressources (module 6)
+- [x] Visibilité : `published` + `published_at <= now()`
+- [x] Lead : proposer un event limité à sa `community_id` (`event.propose`)
 
 ### Important ensuite (S)
 
-- [ ] Frise chronologique (`show_in_timeline`) **(S)**
-- [ ] Export / lien calendrier `.ics` **(S)**
+- [x] Frise chronologique (`show_in_timeline`) **(S)**
+- [x] Export / lien calendrier `.ics` **(S)**
 
 ### Plus tard (C)
 
-- [ ] Stats participants / sessions (`show_stats`) **(C)**
+- [x] Stats participants / sessions (`show_stats`) **(C)**
 
 ---
 
@@ -212,9 +212,9 @@ Exposé pour le front « Back Stage », pas une UI ici.
 | Bloc | Statut |
 |---|---|
 | 0. Socle | ☑ |
-| 1. Contenus / accueil | ☐ |
-| 2. Membres / annuaire | ☐ |
-| 3. Événements | ☐ |
+| 1. Contenus / accueil | ☑ |
+| 2. Membres / annuaire | ☑ |
+| 3. Événements | ☑ |
 | 4. Festival | ☐ |
 | 5. Projets | ☐ |
 | 6. Ressources | ☐ |
