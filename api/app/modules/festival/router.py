@@ -1,16 +1,10 @@
-"""Routes FastAPI — festival."""
+"""Routes festival : lecture publique et administration, dans deux fichiers."""
 
 from fastapi import APIRouter
 
-from app.modules.festival.schemas import FestivalStatus
-from app.modules.festival.service import FestivalService
+from app.modules.festival.routes_admin import router as admin_router
+from app.modules.festival.routes_public import router as public_router
 
-router = APIRouter(prefix="/festival", tags=["festival"])
-_service = FestivalService()
-
-
-@router.get("/status", response_model=FestivalStatus, summary="Éditions Festival, annonces, redirects")
-async def festival_status() -> FestivalStatus:
-    """Stub : module monté, logique à venir (voir TODO.md)."""
-    data = _service.status()
-    return FestivalStatus(**data)
+router = APIRouter()
+router.include_router(public_router)
+router.include_router(admin_router)
