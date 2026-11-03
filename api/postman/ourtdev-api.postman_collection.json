@@ -1,29 +1,86 @@
 {
   "info": {
     "name": "ourtdev API",
-    "description": "Collection Postman de l'API ourtdev.com — socle, module Contenus et module Membres.\n\nPrérequis : `docker compose up -d` puis `uvicorn app.main:app --reload --port 8000` dans `api/`.\n\n1. Lancer **Auth / Register** puis **Auth / Login** : les jetons sont enregistrés dans `accessToken` et `refreshToken`.\n2. **Compte / Me** enregistre `userId`.\n3. Les routes admin demandent un compte Éditeur (`page.manage`, `member.moderate`…) ou Administrateur (`settings.manage`, `member.export`, `pii.read`).\n\nLangue : query `lang=fr` ou `lang=en`. Le champ `website` des formulaires de contact est un honeypot : le laisser vide.",
+    "description": "Collection Postman de l'API ourtdev.com — socle et modules 1 à 5.\n\nPrérequis : `docker compose up -d` puis `uvicorn app.main:app --reload --port 8000` dans `api/`.\n\n1. Lancer **Auth / Register** puis **Auth / Login** : les jetons sont enregistrés dans `accessToken` et `refreshToken`.\n2. **Compte / Me** enregistre `userId`.\n3. Pour OAuth, lancer d'abord **OAuth GitHub/Google authorize**, puis recopier le `state` retourné dans **OAuth callback**.\n4. Les routes admin demandent un compte Éditeur (`page.manage`, `member.moderate`…) ou Administrateur (`settings.manage`, `member.export`, `pii.read`).\n5. Le module **Projets** (open source) est protégé par `project.submit` (soumission) et `project.review` (validation).\nLangue : query `lang=fr` ou `lang=en`. Le champ `website` des formulaires de contact est un honeypot : le laisser vide.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {"key": "baseUrl", "value": "http://localhost:8000/api/v1"},
-    {"key": "accessToken", "value": ""},
-    {"key": "refreshToken", "value": ""},
-    {"key": "userId", "value": ""},
-    {"key": "pageId", "value": ""},
-    {"key": "articleId", "value": ""},
-    {"key": "articleSlug", "value": "premiere-actu"},
-    {"key": "teamId", "value": ""},
-    {"key": "partnerId", "value": ""},
-    {"key": "contactId", "value": ""},
-    {"key": "keyFigureId", "value": ""},
-    {"key": "mediaId", "value": ""},
-    {"key": "handle", "value": "awa-dev"},
-    {"key": "eventId", "value": ""},
-    {"key": "eventSlug", "value": "meetup-lome"},
-    {"key": "speakerId", "value": ""},
-    {"key": "editionYear", "value": "2027"},
-    {"key": "announcementId", "value": ""},
-    {"key": "mfaTicket", "value": ""}
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "pageId",
+      "value": ""
+    },
+    {
+      "key": "articleId",
+      "value": ""
+    },
+    {
+      "key": "articleSlug",
+      "value": "premiere-actu"
+    },
+    {
+      "key": "teamId",
+      "value": ""
+    },
+    {
+      "key": "partnerId",
+      "value": ""
+    },
+    {
+      "key": "contactId",
+      "value": ""
+    },
+    {
+      "key": "keyFigureId",
+      "value": ""
+    },
+    {
+      "key": "mediaId",
+      "value": ""
+    },
+    {
+      "key": "handle",
+      "value": "awa-dev"
+    },
+    {
+      "key": "eventId",
+      "value": ""
+    },
+    {
+      "key": "eventSlug",
+      "value": "meetup-lome"
+    },
+    {
+      "key": "speakerId",
+      "value": ""
+    },
+    {
+      "key": "editionYear",
+      "value": "2027"
+    },
+    {
+      "key": "announcementId",
+      "value": ""
+    },
+    {
+      "key": "mfaTicket",
+      "value": ""
+    }
   ],
   "item": [
     {
@@ -31,7 +88,10 @@
       "item": [
         {
           "name": "Health",
-          "request": {"method": "GET", "url": "{{baseUrl}}/health"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          }
         }
       ]
     },
@@ -40,7 +100,10 @@
       "item": [
         {
           "name": "Statut",
-          "request": {"method": "GET", "url": "{{baseUrl}}/auth/status"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/status"
+          }
         },
         {
           "name": "Register",
@@ -58,7 +121,12 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"membre@example.com\",\n  \"password\": \"Secret123!\",\n  \"preferred_language\": \"fr\"\n}"
@@ -71,8 +139,16 @@
           "name": "Verify email",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"token\": \"TOKEN_EMAIL\"\n}"},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"TOKEN_EMAIL\"\n}"
+            },
             "url": "{{baseUrl}}/auth/verify-email"
           }
         },
@@ -94,7 +170,12 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"membre@example.com\",\n  \"password\": \"Secret123!\"\n}"
@@ -120,8 +201,16 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
+            },
             "url": "{{baseUrl}}/auth/refresh"
           }
         },
@@ -129,8 +218,16 @@
           "name": "Logout",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
+            },
             "url": "{{baseUrl}}/auth/logout"
           }
         },
@@ -138,8 +235,16 @@
           "name": "Forgot password",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"membre@example.com\"\n}"},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"membre@example.com\"\n}"
+            },
             "url": "{{baseUrl}}/auth/forgot-password"
           }
         },
@@ -147,8 +252,16 @@
           "name": "Reset password",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"token\": \"TOKEN_RESET\",\n  \"new_password\": \"NouveauSecret123!\"\n}"},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"TOKEN_RESET\",\n  \"new_password\": \"NouveauSecret123!\"\n}"
+            },
             "url": "{{baseUrl}}/auth/reset-password"
           }
         },
@@ -172,15 +285,20 @@
           "name": "OAuth callback",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/auth/oauth/github/callback?code=CODE_OAUTH",
-            "description": "Remplacer github par google si besoin. Le code vient du fournisseur OAuth."
+            "url": "{{baseUrl}}/auth/oauth/github/callback?code=CODE_OAUTH&state=STATE_FROM_AUTHORIZE",
+            "description": "Remplacer github par google si besoin. Le code et le state viennent du fournisseur OAuth/authorize."
           }
         },
         {
           "name": "MFA setup",
           "request": {
             "method": "POST",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/auth/mfa/setup",
             "description": "Retourne le secret TOTP. Réservé ensuite à la connexion des administrateurs."
           }
@@ -190,10 +308,19 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"code\": \"123456\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"123456\"\n}"
+            },
             "url": "{{baseUrl}}/auth/mfa/enable",
             "description": "Code à 6 chiffres de l'application d'authentification. La réponse contient les codes de secours."
           }
@@ -215,8 +342,16 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"mfa_ticket\": \"{{mfaTicket}}\",\n  \"code\": \"123456\"\n}"},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mfa_ticket\": \"{{mfaTicket}}\",\n  \"code\": \"123456\"\n}"
+            },
             "url": "{{baseUrl}}/auth/mfa/verify",
             "description": "Après un login admin qui a renvoyé mfa_ticket. code = TOTP ou code de secours."
           }
@@ -228,7 +363,10 @@
       "item": [
         {
           "name": "Statut",
-          "request": {"method": "GET", "url": "{{baseUrl}}/users/status"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users/status"
+          }
         },
         {
           "name": "Me",
@@ -246,19 +384,32 @@
           ],
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/users/me"
           }
         },
         {
           "name": "Settings publics",
-          "request": {"method": "GET", "url": "{{baseUrl}}/settings"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/settings"
+          }
         },
         {
           "name": "Settings (admin)",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/settings/all",
             "description": "Permission settings.manage (administrateur)."
           }
@@ -268,10 +419,19 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"value\": \"TDEV\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": \"TDEV\"\n}"
+            },
             "url": "{{baseUrl}}/settings/site_name",
             "description": "Permission settings.manage. Remplacer site_name par la clé voulue."
           }
@@ -283,7 +443,10 @@
       "item": [
         {
           "name": "Statut",
-          "request": {"method": "GET", "url": "{{baseUrl}}/media/status"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/media/status"
+          }
         },
         {
           "name": "Upload",
@@ -301,13 +464,30 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "body": {
               "mode": "formdata",
               "formdata": [
-                {"key": "file", "type": "file", "src": ""},
-                {"key": "alt_text", "value": "Illustration", "type": "text"},
-                {"key": "language_code", "value": "fr", "type": "text"}
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "alt_text",
+                  "value": "Illustration",
+                  "type": "text"
+                },
+                {
+                  "key": "language_code",
+                  "value": "fr",
+                  "type": "text"
+                }
               ]
             },
             "url": "{{baseUrl}}/media",
@@ -316,7 +496,10 @@
         },
         {
           "name": "Métadonnées",
-          "request": {"method": "GET", "url": "{{baseUrl}}/media/{{mediaId}}"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/media/{{mediaId}}"
+          }
         }
       ]
     },
@@ -325,41 +508,70 @@
       "item": [
         {
           "name": "Statut",
-          "request": {"method": "GET", "url": "{{baseUrl}}/contents/status"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/contents/status"
+          }
         },
         {
           "name": "Accueil",
-          "request": {"method": "GET", "url": "{{baseUrl}}/home?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/home?lang=fr"
+          }
         },
         {
           "name": "Page publique",
-          "request": {"method": "GET", "url": "{{baseUrl}}/pages/a-propos?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/pages/a-propos?lang=fr"
+          }
         },
         {
           "name": "Page publique EN",
-          "request": {"method": "GET", "url": "{{baseUrl}}/pages/a-propos?lang=en"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/pages/a-propos?lang=en"
+          }
         },
         {
           "name": "Équipe",
-          "request": {"method": "GET", "url": "{{baseUrl}}/team?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/team?lang=fr"
+          }
         },
         {
           "name": "Partenaires",
-          "request": {"method": "GET", "url": "{{baseUrl}}/partners?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/partners?lang=fr"
+          }
         },
         {
           "name": "Articles",
-          "request": {"method": "GET", "url": "{{baseUrl}}/articles?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/articles?lang=fr"
+          }
         },
         {
           "name": "Article",
-          "request": {"method": "GET", "url": "{{baseUrl}}/articles/{{articleSlug}}?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/articles/{{articleSlug}}?lang=fr"
+          }
         },
         {
           "name": "Contact",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Ada\",\n  \"email\": \"ada@example.com\",\n  \"subject\": \"Bonjour\",\n  \"message\": \"Message de contact\",\n  \"website\": \"\"\n}"
@@ -372,7 +584,12 @@
           "name": "Admin — lister les pages",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/pages",
             "description": "Permission page.manage."
           }
@@ -394,8 +611,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -409,8 +632,14 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -423,7 +652,12 @@
           "name": "Admin — publier une page",
           "request": {
             "method": "POST",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/pages/{{pageId}}/publish"
           }
         },
@@ -444,8 +678,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -459,8 +699,14 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -486,8 +732,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -502,10 +754,19 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"show_on_home\": true\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"show_on_home\": true\n}"
+            },
             "url": "{{baseUrl}}/admin/partners/{{partnerId}}"
           }
         },
@@ -527,8 +788,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -543,8 +810,14 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -569,7 +842,12 @@
           ],
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/contact",
             "description": "Permission contact.read."
           }
@@ -579,10 +857,19 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"status\": \"handled\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"handled\"\n}"
+            },
             "url": "{{baseUrl}}/admin/contact/{{contactId}}",
             "description": "Statuts : new, read, handled, spam."
           }
@@ -603,7 +890,12 @@
           ],
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/key-figures?lang=fr",
             "description": "Permission key_figure.manage."
           }
@@ -613,10 +905,19 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"label_fr\": \"Membres\",\n  \"label_en\": \"Members\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label_fr\": \"Membres\",\n  \"label_en\": \"Members\"\n}"
+            },
             "url": "{{baseUrl}}/admin/key-figures/{{keyFigureId}}"
           }
         }
@@ -627,21 +928,36 @@
       "item": [
         {
           "name": "Statut",
-          "request": {"method": "GET", "url": "{{baseUrl}}/members/status"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/members/status"
+          }
         },
         {
           "name": "Compétences",
-          "request": {"method": "GET", "url": "{{baseUrl}}/technologies"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/technologies"
+          }
         },
         {
           "name": "Admin — créer une compétence",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"slug\": \"python\",\n  \"name\": \"Python\",\n  \"category\": \"langage\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"python\",\n  \"name\": \"Python\",\n  \"category\": \"langage\"\n}"
+            },
             "url": "{{baseUrl}}/admin/technologies",
             "description": "Permission member.moderate. name est unique."
           }
@@ -663,8 +979,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -678,7 +1000,12 @@
           "name": "Mon profil",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/members/me?lang=fr"
           }
         },
@@ -702,7 +1029,12 @@
           "name": "Contacter un membre",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Ada\",\n  \"email\": \"ada@example.com\",\n  \"subject\": \"Collab\",\n  \"message\": \"Bonjour\",\n  \"website\": \"\"\n}"
@@ -715,7 +1047,12 @@
           "name": "Lire mes données personnelles",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/members/me/pii"
           }
         },
@@ -724,8 +1061,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -739,7 +1082,12 @@
           "name": "Mon tableau de bord",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/members/me/dashboard"
           }
         },
@@ -747,7 +1095,12 @@
           "name": "Admin — valider une inscription",
           "request": {
             "method": "POST",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/members/{{userId}}/approve",
             "description": "Permission member.approve. userId = le compte à valider, pas forcément le compte connecté."
           }
@@ -757,10 +1110,19 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"hidden\": true\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hidden\": true\n}"
+            },
             "url": "{{baseUrl}}/admin/members/{{userId}}/visibility",
             "description": "Permission member.moderate. hidden=false réaffiche le profil."
           }
@@ -770,10 +1132,19 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"code\": \"contributor\",\n  \"edition_year\": null\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"contributor\",\n  \"edition_year\": null\n}"
+            },
             "url": "{{baseUrl}}/admin/members/{{userId}}/badges",
             "description": "Codes seed : lead, contributor, speaker, festival_alumni. edition_year pour speaker."
           }
@@ -782,7 +1153,12 @@
           "name": "Admin — PII d'un membre",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/members/{{userId}}/pii",
             "description": "Permission pii.read (administrateur)."
           }
@@ -791,7 +1167,12 @@
           "name": "Admin — export CSV",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/members/export",
             "description": "Permission member.export. Les colonnes prénom, nom et téléphone ne sont remplies qu'avec pii.read."
           }
@@ -803,7 +1184,10 @@
       "item": [
         {
           "name": "Statut",
-          "request": {"method": "GET", "url": "{{baseUrl}}/events/status"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events/status"
+          }
         },
         {
           "name": "Liste",
@@ -815,25 +1199,43 @@
         },
         {
           "name": "Frise",
-          "request": {"method": "GET", "url": "{{baseUrl}}/events/timeline?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events/timeline?lang=fr"
+          }
         },
         {
           "name": "Fiche",
-          "request": {"method": "GET", "url": "{{baseUrl}}/events/{{eventSlug}}?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events/{{eventSlug}}?lang=fr"
+          }
         },
         {
           "name": "Calendrier ICS",
-          "request": {"method": "GET", "url": "{{baseUrl}}/events/{{eventSlug}}/calendar.ics"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events/{{eventSlug}}/calendar.ics"
+          }
         },
         {
           "name": "S'inscrire",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"role\": \"attendee\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"attendee\"\n}"
+            },
             "url": "{{baseUrl}}/events/{{eventSlug}}/register",
             "description": "role : attendee, volunteer ou organizer. Réservé à un compte connecté."
           }
@@ -856,8 +1258,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -872,8 +1280,14 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -887,7 +1301,12 @@
           "name": "Admin — publier",
           "request": {
             "method": "POST",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/events/{{eventId}}/publish",
             "description": "Permission event.manage. Crée le dossier ressources lié à l'événement."
           }
@@ -909,8 +1328,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -924,8 +1349,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -940,8 +1371,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -956,10 +1393,19 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"partner_id\": \"{{partnerId}}\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"partner_id\": \"{{partnerId}}\"\n}"
+            },
             "url": "{{baseUrl}}/admin/events/{{eventId}}/partners",
             "description": "Créer d'abord le partenaire dans le module Contenus pour remplir partnerId."
           }
@@ -971,19 +1417,31 @@
       "item": [
         {
           "name": "Statut",
-          "request": {"method": "GET", "url": "{{baseUrl}}/festival/status"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/festival/status"
+          }
         },
         {
           "name": "Page festival",
-          "request": {"method": "GET", "url": "{{baseUrl}}/festival?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/festival?lang=fr"
+          }
         },
         {
           "name": "Édition en cours",
-          "request": {"method": "GET", "url": "{{baseUrl}}/festival/current?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/festival/current?lang=fr"
+          }
         },
         {
           "name": "Édition par année",
-          "request": {"method": "GET", "url": "{{baseUrl}}/festival/{{editionYear}}?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/festival/{{editionYear}}?lang=fr"
+          }
         },
         {
           "name": "Aller au lien de l'édition",
@@ -995,11 +1453,17 @@
         },
         {
           "name": "Annonces actives",
-          "request": {"method": "GET", "url": "{{baseUrl}}/festival/announcements?lang=fr"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/festival/announcements?lang=fr"
+          }
         },
         {
           "name": "Résoudre une redirection",
-          "request": {"method": "GET", "url": "{{baseUrl}}/redirects/resolve?path=/festival/{{editionYear}}"}
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/redirects/resolve?path=/festival/{{editionYear}}"
+          }
         },
         {
           "name": "Admin — créer une édition",
@@ -1018,8 +1482,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -1034,10 +1504,19 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"target_url\": \"https://festival.example/2027\"\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_url\": \"https://festival.example/2027\"\n}"
+            },
             "url": "{{baseUrl}}/admin/festival/editions/{{editionYear}}"
           }
         },
@@ -1045,7 +1524,12 @@
           "name": "Admin — publier",
           "request": {
             "method": "POST",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/festival/editions/{{editionYear}}/publish"
           }
         },
@@ -1054,8 +1538,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -1081,8 +1571,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -1097,10 +1593,19 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
-            "body": {"mode": "raw", "raw": "{\n  \"is_active\": false\n}"},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": false\n}"
+            },
             "url": "{{baseUrl}}/admin/festival/announcements/{{announcementId}}"
           }
         },
@@ -1108,10 +1613,122 @@
           "name": "Admin — redirections",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/admin/redirects",
             "description": "Permission settings.manage (administrateur)."
           }
+        }
+      ]
+    },
+    {
+      "name": "Module 5 — Projets",
+      "item": [
+        {
+          "name": "Catalogue public (approuvés)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": "{{baseUrl}}/projects",
+            "description": "Liste des projets approuvés (`review_status = approved`). Filtres : `category_id`, `stage`, `is_featured`, `technology_id`, `search`, `page`, `page_size`."
+          },
+          "response": []
+        },
+        {
+          "name": "Fiche d'un projet",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": "{{baseUrl}}/projects/{{slug}}",
+            "description": "Fiche publique d'un projet (seulement si `review_status = approved`)."
+          },
+          "response": []
+        },
+        {
+          "name": "Catégories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": "{{baseUrl}}/categories",
+            "description": "Liste des catégories de projets."
+          },
+          "response": []
+        },
+        {
+          "name": "Soumettre un projet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"mon-projet\",\n  \"name\": \"Mon projet\",\n  \"summary\": \"Résumé\",\n  \"description\": \"Description\",\n  \"translations\": [\n    {\"language_code\": \"fr\", \"summary\": \"Résumé\", \"description\": \"Description\"}\n  ],\n  \"technology_ids\": [1, 2]\n}"
+            },
+            "url": "{{baseUrl}}/projects",
+            "description": "Soumission d'un projet (permission `project.submit`). Revient en `pending`."
+          },
+          "response": []
+        },
+        {
+          "name": "Catalogue admin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": "{{baseUrl}}/admin/projects",
+            "description": "Tous les projets, avec filtres. Permission `project.review`."
+          },
+          "response": []
+        },
+        {
+          "name": "Valider ou rejeter",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approve\"\n}"
+            },
+            "url": "{{baseUrl}}/admin/projects/{{slug}}/review",
+            "description": "Valider (`approve`) ou rejeter (`reject`) un projet. Permission `project.review`. `rejection_reason` obligatoire en cas de rejet."
+          },
+          "response": []
+        },
+        {
+          "name": "Ajouter des contributeurs",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contributor_ids\": [1, 2]\n}"
+            },
+            "url": "{{baseUrl}}/admin/projects/{{slug}}/contributors",
+            "description": "Ajouter des contributeurs (IDs membres). Permission `project.review`."
+          },
+          "response": []
+        },
+        {
+          "name": "Retirer un contributeur",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {},
+            "url": "{{baseUrl}}/admin/projects/{{slug}}/contributors/{{user_id}}",
+            "description": "Retrait logique d'un contributeur (suppression douce, `deleted_at`). Permission `project.review`."
+          },
+          "response": []
         }
       ]
     }

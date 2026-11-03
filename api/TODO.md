@@ -135,15 +135,15 @@ Tables : `projects`, `project_categories`, `project_technologies`, `project_cont
 
 ### Important (M)
 
-- [ ] Catalogue projets : nom, description, stack, stage, équipe, GitHub, démo, licence
-- [ ] Liste publique : uniquement `review_status = approved`
-- [ ] Filtres lecture (technologie, stage, catégorie) — au minimum lecture M, filtres **(S)**
+- [x] Catalogue projets : nom, description, stack, stage, équipe, GitHub, démo, licence
+- [x] Liste publique : uniquement `review_status = approved`
+- [x] Filtres lecture (technologie, stage, catégorie) — au minimum lecture M, filtres **(S)**
 
 ### Important ensuite (S)
 
-- [ ] Soumission projet par membre (`project.submit`) → `pending` **(S)**
-- [ ] Validation / rejet éditeur (`project.review`) **(S)**
-- [ ] Contributeurs liés aux profils membres **(S)**
+- [x] Soumission projet par membre (`project.submit`) → `pending` **(S)**
+- [x] Validation / rejet éditeur (`project.review`) **(S)**
+- [x] Contributeurs liés aux profils membres **(S)**
 - [ ] Page / endpoint « Contribuer » (guide) **(S)**
 
 ### Plus tard (C)
