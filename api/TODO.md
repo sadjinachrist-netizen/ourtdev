@@ -43,17 +43,17 @@ Tables : `pages`, `team_members`, `partners`, `partner_levels`, `articles`, `art
 
 ### Important (M)
 
-- [ ] Lecture publique page d’accueil (chiffres clés, prochains events, dernières actus — agrégation)
-- [ ] CRUD / lecture pages (`accueil`, `a-propos`, `contact`, etc.) bilingue
-- [ ] Page À propos : équipe / bureau (`team_members`)
-- [ ] Partenaires : liste + niveaux + logos **(M)**
-- [ ] Contact : `POST` message + anti-spam (captcha / rate limit) **(M)**
-- [ ] i18n FR/EN sur tous les contenus de ce module **(M)**
+- [x] Lecture publique page d’accueil (chiffres clés, prochains events, dernières actus — agrégation)
+- [x] CRUD / lecture pages (`accueil`, `a-propos`, `contact`, etc.) bilingue
+- [x] Page À propos : équipe / bureau (`team_members`)
+- [x] Partenaires : liste + niveaux + logos **(M)**
+- [x] Contact : `POST` message + anti-spam (captcha / rate limit) **(M)**
+- [x] i18n FR/EN sur tous les contenus de ce module **(M)**
 
 ### Important ensuite (S)
 
-- [ ] Blog / actualités : liste, fiche, catégories, tags **(S)**
-- [ ] Admin : workflow `draft → in_review → published` + `published_at` **(S)**
+- [x] Blog / actualités : liste, fiche, catégories, tags **(S)**
+- [x] Admin : workflow `draft → in_review → published` + `published_at` **(S)**
 
 ### Plus tard (C)
 
@@ -212,7 +212,7 @@ Exposé pour le front « Back Stage », pas une UI ici.
 | Bloc | Statut |
 |---|---|
 | 0. Socle | ☑ |
-| 1. Contenus / accueil | ☐ |
+| 1. Contenus / accueil | ☑ |
 | 2. Membres / annuaire | ☐ |
 | 3. Événements | ☐ |
 | 4. Festival | ☐ |
