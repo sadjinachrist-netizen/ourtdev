@@ -23,7 +23,7 @@ from app.modules.resources.service import ResourcesService
 
 pytestmark = pytest.mark.asyncio
 
-TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/ourtdev_test"
+TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/ourtdev"
 
 service = ResourcesService()
 
@@ -33,12 +33,17 @@ async def test_db():
     from app.core.config import get_settings
     get_settings().database_url = TEST_DATABASE_URL
     engine = create_async_engine(TEST_DATABASE_URL, echo=False, pool_pre_ping=True)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+    async with engine.connect() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    async with async_sessionmaker(bind=engine, expire_on_commit=False) as session:
+    async with async_sessionmaker(bind=engine, expire_on_commit=False)() as session:
         yield session
     await engine.dispose()
+
+
+@pytest.fixture
+async def db(test_db) -> AsyncSession:
+    """Fixture : session de base de données pour les tests unitaires."""
+    yield test_db
 
 
 # === Fixtures de données de test
