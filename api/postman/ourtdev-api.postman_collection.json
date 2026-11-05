@@ -1,0 +1,109 @@
+{
+  "info": {
+    "name": "ourtdev API - Module 6 (Ressources)",
+    "description": "Collection Postman de l'API ourtdev.com — module Ressources (module 6) : dossiers, ressources, statut.\n\nPrérequis : `docker compose up -d` puis `uvicorn app.main:app --reload --port 8000` dans `api/`.\n\nLangue : query `lang=fr` ou `lang=en`. Le champ `website` des formulaires de contact est un honeypot : le laisser vide.\n\nRoutes admin nécessitent la permission `resource.manage`.", 
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8000/api/v1"},
+    {"key": "accessToken", "value": ""},
+    {"key": "refreshToken", "value": ""},
+    {"key": "userId", "value": ""},
+    {"key": "resourceId", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "Module 6 — Ressources",
+      "description": "API du module 6 (ressources) : dossiers arborescents, liste des ressources, statut du module", 
+      "item": [
+        {
+          "name": "Statut",
+          "item": [
+            {
+              "name": "Statut du module resources",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/resources/status"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Dossiers",
+          "description": "Arborescence des dossiers de ressources (filtres optionnels)", 
+          "item": [
+            {
+              "name": "Liste des dossiers",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/resources/folders",
+                "query": [
+                  {"key": "event_id", "value": ""},
+                  {"key": "program_id", "value": ""},
+                  {"key": "edition_year", "value": ""},
+                  {"key": "access_level", "value": ""},
+                  {"key": "status", "value": ""},
+                  {"key": "lang", "value": "fr"}
+                ]
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Ressources",
+          "description": "Liste des ressources (filtres optionnels)", 
+          "item": [
+            {
+              "name": "Liste des ressources",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/resources/resources",
+                "query": [
+                  {"key": "folder_id", "value": ""},
+                  {"key": "type", "value": ""},
+                  {"key": "access_level", "value": ""},
+                  {"key": "status", "value": ""},
+                  {"key": "year", "value": ""},
+                  {"key": "event_id", "value": ""},
+                  {"key": "lang", "value": "fr"}
+                ]
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Admin",
+          "description": "Routes nécessitant la permission resource.manage.", 
+          "item": [
+            {
+              "name": "Créer une ressource",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {"key": "Content-Type", "value": "application/json"}
+                ],
+                "url": "{{baseUrl}}/resources/",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"folder_id\": \"\",\n  \"type\": \"slides\",\n  \"title\": \"Titre\",\n  \"description\": \"Description\",\n  \"access_level\": \"public\",\n  \"url\": \"https://example.com\",\n  \"translations\": [\n    {\"language_code\": \"fr\", \"title\": \"Titre FR\", \"description\": \"Description FR\"}\n  ]\n}"
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Supprimer une ressource",
+              "request": {
+                "method": "DELETE",
+                "url": "{{baseUrl}}/resources/{{resourceId}}"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
